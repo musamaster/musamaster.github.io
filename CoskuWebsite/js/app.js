@@ -5,7 +5,7 @@ window.onload = function() {
   animate();
 }
 
-import { FBXLoader } from '/jsm/FBXLoader.js';
+import FBXLoader from '/jsm/FBXLoader.js';
 
 function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
