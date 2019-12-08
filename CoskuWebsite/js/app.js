@@ -5,6 +5,7 @@ window.onload = function() {
   animate();
 }
 
+import { FBXLoader } from '/jsm/FBXLoader.js';
 
 function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -21,7 +22,8 @@ function init() {
   scene.add(camera);
 
   //circle = new THREE.Object3D();
-  loader.load( 'geo/ear.fbx', function ( circle ) {
+  var loader = new FBXLoader();
+  loader.load( '/geo/ear.fbx', function ( circle ) {
 
     scene.add( circle );
 
