@@ -5,6 +5,7 @@ window.onload = function() {
   animate();
 }
 
+
 function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
