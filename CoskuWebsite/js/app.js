@@ -1,5 +1,5 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-import { FBXLoader } from "/jsm/loaders/FBXLoader.js";
+//import { FBXLoader } from "/jsm/loaders/FBXLoader.js";
  var renderer, scene, camera, composer, circle, skelet, particle;
 
 window.onload = function() {
