@@ -21,18 +21,18 @@ function init() {
   camera.position.z = 400;
   scene.add(camera);
 
-  //circle = new THREE.Object3D();
-  var loader = new FBXLoader();
-  loader.load( '/geo/ear.fbx', function ( circle ) {
-
-    scene.add( circle );
-
-  } );
+  circle = new THREE.Object3D();
+  // var loader = new FBXLoader();
+  // loader.load( '/geo/ear.fbx', function ( circle ) {
+  //
+  //   scene.add( circle );
+  //
+  // } );
 
   skelet = new THREE.Object3D();
   particle = new THREE.Object3D();
 
-  //scene.add(circle);
+  scene.add(circle);
   scene.add(skelet);
   scene.add(particle);
 
@@ -65,9 +65,9 @@ function init() {
 
   });
 
-  // var planet = new THREE.Mesh(geom, mat);
-  // planet.scale.x = planet.scale.y = planet.scale.z = 16;
-  // circle.add(planet);
+  var planet = new THREE.Mesh(geom, mat);
+  planet.scale.x = planet.scale.y = planet.scale.z = 16;
+  circle.add(planet);
 
   var planet2 = new THREE.Mesh(geom2, mat2);
   planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
