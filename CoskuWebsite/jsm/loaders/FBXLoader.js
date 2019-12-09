@@ -62,9 +62,9 @@ import {
 	VectorKeyframeTrack,
 	VertexColors,
 	sRGBEncoding
-} from "../../../build/three.module.js";
-import { Zlib } from "../libs/inflate.module.min.js";
-import { NURBSCurve } from "../curves/NURBSCurve.js";
+} from "/js/three.module.js";
+import { Zlib } from "/jsm/libs/inflate.module.min.js";
+import { NURBSCurve } from "/jsm/curves/NURBSCurve.js";
 
 
 var FBXLoader = ( function () {
