@@ -35,7 +35,7 @@ function init() {
 
   //circle = new THREE.Object3D();
   var loader = new FBXLoader();
-  loader.load( '/geo/ear.fbx', function ( ear )
+  loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
