@@ -9,7 +9,7 @@
 import {
 	Vector3,
 	Vector4
-} from "/js/three.module.js";
+} from "../../js/three.module.js";
 
 
 /**************************************************************
