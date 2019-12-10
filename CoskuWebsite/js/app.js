@@ -1,5 +1,5 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-import { FBXLoader } from "./jsm/loaders/FBXLoader.js";
+import { FBXLoader } from "../jsm/loaders/FBXLoader.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear;
 
 window.onload = function() {
@@ -35,7 +35,7 @@ function init() {
 
   //circle = new THREE.Object3D();
   var loader = new FBXLoader();
-  loader.load( '/geo/ear.fbx', function ( ear )
+  loader.load( '../geo/ear.fbx', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
