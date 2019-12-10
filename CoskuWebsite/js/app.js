@@ -1,11 +1,23 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-//import { FBXLoader } from "/jsm/loaders/FBXLoader.js";
- var renderer, scene, camera, composer, circle, skelet, particle;
+import { FBXLoader } from "/jsm/loaders/FBXLoader.js";
+var renderer, scene, camera, composer, circle, skelet, particle, ear;
 
 window.onload = function() {
   init();
   animate();
 }
+window.addEventListener('wheel', onMouseWheel, false);
+
+var mousedelta = 0.0;
+
+function onMouseWheel(event) {
+
+  event.preventDefault();
+
+  mousedelta += event.deltaY * 0.001;
+}
+
+
 
 function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -23,9 +35,18 @@ function init() {
 
   //circle = new THREE.Object3D();
   var loader = new FBXLoader();
-  loader.load( '/geo/ear.fbx', function ( circle ) {
+  loader.load( '/geo/ear.fbx', function ( ear )
+  {
+    ear.traverse( ( child ) =>
+    {
+      if ( child.isMesh )
+      {
+        child.material.wireframe = true;
+      }
+    }  );
 
-    scene.add( circle );
+    ear.scale.x = ear.scale.y = ear.scale.z = 3;
+    scene.add( ear );
 
   } );
 
@@ -65,9 +86,9 @@ function init() {
 
   });
 
-  var planet = new THREE.Mesh(geom, mat);
-  planet.scale.x = planet.scale.y = planet.scale.z = 16;
-  //circle.add(planet);
+  // var planet = new THREE.Mesh(ear, mat);
+  // planet.scale.x = planet.scale.y = planet.scale.z = 16;
+  // circle.add(planet);
 
   var planet2 = new THREE.Mesh(geom2, mat2);
   planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
@@ -96,17 +117,21 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
+};
 
 function animate() {
   requestAnimationFrame(animate);
 
-  particle.rotation.x += 0.0000;
-  particle.rotation.y -= 0.0040;
-  circle.rotation.x -= 0.0020;
-  circle.rotation.y -= 0.0030;
-  skelet.rotation.x -= 0.0010;
-  skelet.rotation.y += 0.0020;
+  particle.rotation.x = mousedelta;
+  particle.rotation.y = mousedelta;
+  skelet.rotation.x = mousedelta;
+  skelet.rotation.y = mousedelta;
+  //particle.rotation.x += 0.0000;
+  //particle.rotation.y -= 0.0040;
+  //ear.rotation.x -= 0.0020;
+  //ear.rotation.y -= 0.0030;
+  // skelet.rotation.x -= 0.0010;
+  // skelet.rotation.y += 0.0020;
   renderer.clear();
 
   renderer.render( scene, camera )
