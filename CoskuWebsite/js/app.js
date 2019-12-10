@@ -12,7 +12,7 @@ var mousedelta = 0.0;
 
 function onMouseWheel(event) {
 
-  event.preventDefault();
+  //event.preventDefault();
 
   mousedelta += event.deltaY * 0.001;
 }
