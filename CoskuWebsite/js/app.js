@@ -63,6 +63,12 @@ function init() {
 
 
   //CREATE PARTICLES
+  var material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    shading: THREE.FlatShading
+  });
+
+
   for (var i = 0; i < 1000; i++) {
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
@@ -72,10 +78,6 @@ function init() {
   }
 
   //MATERIALS
-  var material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    shading: THREE.FlatShading
-  });
 
 
   var mat = new THREE.MeshPhongMaterial({
