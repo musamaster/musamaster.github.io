@@ -57,7 +57,7 @@ function init() {
   // } );
   //LOAD OBJ EAR
   var loader = new OBJLoader();
-  loader.load( '/geo/ear.obj', function ( ear )
+  loader.load( '/CoskuWebsite/geo/ear.obj', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
