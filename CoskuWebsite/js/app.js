@@ -2,10 +2,7 @@
 import { FBXLoader } from "../jsm/loaders/FBXLoader.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear;
 
-window.onload = function() {
-  init();
-  animate();
-}
+
 window.addEventListener('wheel', onMouseWheel, false);
 
 var mousedelta = 0.0;
@@ -35,7 +32,8 @@ function init() {
 
   //circle = new THREE.Object3D();
   var loader = new FBXLoader();
-  loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
+
+  loader.load( '/geo/ear.fbx', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
@@ -119,19 +117,25 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 };
 
+window.onload = function() {
+  init();
+  animate();
+}
+
 function animate() {
   requestAnimationFrame(animate);
 
-  particle.rotation.x = mousedelta;
-  particle.rotation.y = mousedelta;
-  skelet.rotation.x = mousedelta;
-  skelet.rotation.y = mousedelta;
-  //particle.rotation.x += 0.0000;
-  //particle.rotation.y -= 0.0040;
+  //particle.rotation.x = mousedelta;
+  //particle.rotation.y = mousedelta;
+  //skelet.rotation.x = mousedelta;
+  //skelet.rotation.y = mousedelta;
+
+  particle.rotation.x += 0.0000;
+  particle.rotation.y -= 0.0040;
   //ear.rotation.x -= 0.0020;
   //ear.rotation.y -= 0.0030;
-  // skelet.rotation.x -= 0.0010;
-  // skelet.rotation.y += 0.0020;
+  skelet.rotation.x -= 0.0010;
+  skelet.rotation.y += 0.0020;
   renderer.clear();
 
   renderer.render( scene, camera )
