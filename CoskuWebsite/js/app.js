@@ -1,5 +1,5 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-import { FBXLoader } from "../jsm/loaders/FBXLoader.js";
+import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp;
 
 
@@ -42,14 +42,28 @@ function init() {
   scene.add(particle);
 
   //LOAD FBX EAR
-  var loader = new FBXLoader();
-  loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
+  // var loader = new FBXLoader();
+  // loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
+  // {
+  //   ear.traverse( ( child ) =>
+  //   {
+  //     if ( child.isMesh )
+  //     {
+  //       child.material.wireframe = true;
+  //       earGrp.add(child);
+  //     }
+  //   }  );
+  //
+  // } );
+  //LOAD OBJ EAR
+  var loader = new OBJLoader();
+  loader.load( '/geo/ear.obj', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
       if ( child.isMesh )
       {
-        child.material.wireframe = true;
+        //child.material.wireframe = true;
         earGrp.add(child);
       }
     }  );
@@ -94,7 +108,7 @@ function init() {
 
   //var planet = new THREE.Mesh(earGrp, mat2);
   //planet.scale.x = planet.scale.y = planet.scale.z = 16;
-  earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 3;
+  earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
 
   var planet2 = new THREE.Mesh(geom2, mat2);
   planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
