@@ -43,7 +43,7 @@ function init() {
 
   //LOAD FBX EAR
   var loader = new FBXLoader();
-  loader.load( '/geo/ear.fbx', function ( ear )
+  loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
