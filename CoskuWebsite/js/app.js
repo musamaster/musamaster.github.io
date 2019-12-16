@@ -110,7 +110,7 @@ function init() {
 	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 	var material = new THREE.ShaderMaterial( {
 		uniforms: {
-			color: { value: new THREE.Color( 0xf2f1bf ) },
+			color: { value: new THREE.Color( 0xffffff ) },
 		},
 		vertexShader: document.getElementById( 'vertexshader' ).textContent,
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
