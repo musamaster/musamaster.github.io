@@ -38,12 +38,15 @@
 			uniform vec3 color;
 			void main() {
 				if ( length( gl_PointCoord - vec2( 0.5, 0.5 ) ) > 0.475 ) discard;
-				gl_FragColor = vec4( color, 0.0 );
+				gl_FragColor = vec4( color, 1.0 );
 			}
 		</script>
+
 		<!-- <script type="module" src="./jsm/loaders/FBXLoader.js"></script> -->
-		<script type="module" src="./jsm/loaders/OBJLoader.js"></script>
-		<script type="module" src="./js/app.js"></script>
+		<script type="module" src="./jsm/loaders/OBJLoader.js">
+		</script>
+		<script type="module" src="./js/app.js">
+		</script>
 
 	</body>
 </html>

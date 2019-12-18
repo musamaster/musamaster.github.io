@@ -1,25 +1,11 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles;
+var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles,analyser;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
-
-//window.addEventListener('wheel', Scroll, false);
-
-
-
 var mousedelta = 0.0;
-
-// function Scroll(event) {
-//
-//   //event.preventDefault();
-//
-//   mousedelta += event.deltaY * 0.001;
-// }
-
-console.log(mousedelta);
 
 function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -32,13 +18,35 @@ function init() {
   document.addEventListener( 'touchstart', onDocumentTouchStart, false );
   document.addEventListener( 'touchmove', onDocumentTouchMove, false );
 
-
   //SCENE
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 400;
   scene.add(camera);
+  var listener = new THREE.AudioListener();
+  camera.add(listener);
+
+  var sound = new THREE.Audio(listener);
+  var audioLoader = new THREE.AudioLoader();
+
+  function playSound() {
+    audioLoader.load("/CoskuWebsite/01_Mountain_Ash.mp3", function(buffer) {
+      sound.setBuffer( buffer );
+      sound.play();
+    });
+
+    var source = listener.context.createBufferSource();
+    source.connect(listener.context.destination);
+    source.start();
+  }
+  window.addEventListener('touchstart', playSound);
+  document.addEventListener('click', playSound);
+  // create an AudioAnalyser, passing in the sound and desired fftSize
+  analyser = new THREE.AudioAnalyser( sound, 32 );
+
+  // get the average frequency of the sound
+
 
   //GEOMETRY
 
@@ -48,23 +56,7 @@ function init() {
 
   scene.add(earGrp);
   scene.add(skelet);
-  //scene.add(particle);
 
-  //LOAD FBX EAR
-  // var loader = new FBXLoader();
-  // loader.load( '/CoskuWebsite/geo/ear.fbx', function ( ear )
-  // {
-  //   ear.traverse( ( child ) =>
-  //   {
-  //     if ( child.isMesh )
-  //     {
-  //       child.material.wireframe = true;
-  //       earGrp.add(child);
-  //     }
-  //   }  );
-  //
-  // } );
-  //LOAD OBJ EAR
   var loader = new OBJLoader();
   loader.load( '/CoskuWebsite/geo/ear.obj', function ( ear )
   {
@@ -110,7 +102,7 @@ function init() {
 	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 	var material = new THREE.ShaderMaterial( {
 		uniforms: {
-			color: { value: new THREE.Color( 0xffffff ) },
+			color: { value: new THREE.Color( 0x000000f ) },
 		},
 		vertexShader: document.getElementById( 'vertexshader' ).textContent,
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
@@ -199,13 +191,13 @@ function onDocumentTouchMove( event ) {
 	}
 }
 
-window.onload = function() {
-  init();
-  animate();
-}
+// window.onload = function() {
+
+// }
 
 function animate() {
-
+  var data = analyser.getAverageFrequency();
+  console.log(data);
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - mouseY - camera.position.y ) * .05;
@@ -215,10 +207,10 @@ function animate() {
 	var i = 0, j = 0;
 	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
 		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-			positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * 50 ) +
-							( Math.sin( ( iy + count ) * 0.5 ) * 50 );
-			scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 8 +
-							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * 8;
+			positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * data ) +
+							( Math.sin( ( iy + count ) * 0.5 ) * data );
+			scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/10) +
+							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/10);
 			i += 3;
 			j ++;
 		}
@@ -232,9 +224,9 @@ function animate() {
   //particle.rotation.y = mousedelta;
   //skelet.rotation.x = mousedelta;
   //skelet.rotation.y = mousedelta;
-
-  particle.rotation.x += 0.0000;
-  particle.rotation.y -= 0.0040;
+  particles.position.y = -200.0;
+  //particle.rotation.x += 0.0000;
+  //particle.rotation.y -= 0.0040;
   earGrp.rotation.x -= 0.0020;
   earGrp.rotation.y -= 0.0030;
   skelet.rotation.x -= 0.0010;
@@ -242,4 +234,7 @@ function animate() {
   renderer.clear();
 
   renderer.render( scene, camera )
-};
+}
+
+init();
+animate();
