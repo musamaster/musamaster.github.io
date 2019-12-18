@@ -8,6 +8,7 @@ var windowHalfY = window.innerHeight / 2;
 var mousedelta = 0.0;
 
 function init() {
+
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -102,7 +103,7 @@ function init() {
 	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 	var material = new THREE.ShaderMaterial( {
 		uniforms: {
-			color: { value: new THREE.Color( 0x000000f ) },
+			color: { value: new THREE.Color( 0x999999f ) },
 		},
 		vertexShader: document.getElementById( 'vertexshader' ).textContent,
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
@@ -145,15 +146,15 @@ function init() {
 
   //LIGHTS
 
-  var ambientLight = new THREE.AmbientLight(0x999999 );
+  var ambientLight = new THREE.AmbientLight(0x999999,0.25 );
   scene.add(ambientLight);
 
   var lights = [];
-  lights[0] = new THREE.DirectionalLight( 0xffffff, 1 );
+  lights[0] = new THREE.DirectionalLight( 0xffffff, 0.5 );
   lights[0].position.set( 1, 0, 0 );
-  lights[1] = new THREE.DirectionalLight( 0xf2f1bf, 1 );
+  lights[1] = new THREE.DirectionalLight( 0xf2f1bf, 1.0 );
   lights[1].position.set( 0.75, 1, 0.5 );
-  lights[2] = new THREE.DirectionalLight( 0x1B002A, 1 );
+  lights[2] = new THREE.DirectionalLight( 0x1B002A, 1.0 );
   lights[2].position.set( -0.75, -1, 0.5 );
   scene.add( lights[0] );
   scene.add( lights[1] );
@@ -197,7 +198,7 @@ function onDocumentTouchMove( event ) {
 
 function animate() {
   var data = analyser.getAverageFrequency();
-  console.log(data);
+  //console.log(data);
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - mouseY - camera.position.y ) * .05;
