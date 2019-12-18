@@ -30,13 +30,12 @@ function init() {
 
   var sound = new THREE.Audio(listener);
   var audioLoader = new THREE.AudioLoader();
+  audioLoader.load("/CoskuWebsite/01_Mountain_Ash.mp3", function(buffer) {
+  sound.setBuffer( buffer )});
 
   function playSound() {
-    audioLoader.load("/CoskuWebsite/01_Mountain_Ash.mp3", function(buffer) {
-      sound.setBuffer( buffer );
-      sound.play();
-    });
 
+    sound.play();
     var source = listener.context.createBufferSource();
     source.connect(listener.context.destination);
     source.start();
