@@ -2,7 +2,7 @@
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles,analyser;
 var mouseX = 0, mouseY = 0, count = 0;
-var SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
+var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var mousedelta = 0.0;
@@ -44,7 +44,7 @@ function init() {
   window.addEventListener('touchstart', playSound);
   document.addEventListener('click', playSound);
   // create an AudioAnalyser, passing in the sound and desired fftSize
-  analyser = new THREE.AudioAnalyser( sound, 32 );
+  analyser = new THREE.AudioAnalyser( sound, 1024 );
 
   // get the average frequency of the sound
 
@@ -56,7 +56,7 @@ function init() {
   particle = new THREE.Object3D();
 
   scene.add(earGrp);
-  scene.add(skelet);
+  //scene.add(skelet);
 
   var loader = new OBJLoader();
   loader.load( '/CoskuWebsite/geo/ear.obj', function ( ear )
@@ -98,6 +98,7 @@ function init() {
 			j ++;
 		}
 	}
+
 	var geometry = new THREE.BufferGeometry();
 	geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
@@ -108,18 +109,11 @@ function init() {
 		vertexShader: document.getElementById( 'vertexshader' ).textContent,
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	} );
-	//
+
+
 	particles = new THREE.Points( geometry, material );
 	scene.add( particles );
-	//
 
-  // for (var i = 0; i < 1000; i++) {
-  //   var mesh = new THREE.Mesh(geometry, material);
-  //   mesh.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
-  //   mesh.position.multiplyScalar(90 + (Math.random() * 700));
-  //   mesh.rotation.set(Math.random() * 2, Math.random() * 2, Math.random() * 2);
-  //   particle.add(mesh);
-  // }
 
   //MATERIALS
 
@@ -210,8 +204,8 @@ function animate() {
 		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
 			positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * data ) +
 							( Math.sin( ( iy + count ) * 0.5 ) * data );
-			scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/10) +
-							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/10);
+			scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/40) +
+							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/40);
 			i += 3;
 			j ++;
 		}
