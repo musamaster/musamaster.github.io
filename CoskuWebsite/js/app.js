@@ -1,11 +1,15 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles,analyser,child;
+var renderer, scene, camera, composer, circle, skelet, particle, ear, particles,analyser,child;
+var positions = new Float32Array();
+var oldPos = new Float32Array();
+var earGrp = false;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var mousedelta = 0.0;
+var counter = 0;
 
 function init() {
 
@@ -50,38 +54,40 @@ function init() {
   document.addEventListener('click', playSound);
 
   // create an AudioAnalyser, passing in the sound and desired fftSize
-  analyser = new THREE.AudioAnalyser( sound, 1024 );
+  analyser = new THREE.AudioAnalyser( sound, 512 );
   // get the average frequency of the sound
 
   //---AUDIO
 
   //GEOMETRY
 
-  earGrp = new THREE.Object3D();
+  earGrp = new THREE.Group();
   skelet = new THREE.Object3D();
   particle = new THREE.Object3D();
 
-  scene.add(earGrp);
+
   //scene.add(skelet);
 
   var loader = new OBJLoader();
   loader.load( 'geo/heightfield.obj', function ( ear )
   {
-    ear.traverse( ( child ) =>
-    {
-      if ( child.isMesh )
-      {
-        //child.material.wireframe = true;
-        earGrp.add(child);
-      }
-    }  );
+    //console.log(ear.children[0]);
+    earGrp.add(ear.children[0]);
+
 
   } );
 
+  scene.add(earGrp);
+
+
+
+
+
+  //console.log(positions);
   //---CREATE TET GEO
-  var geometryt = new THREE.TetrahedronGeometry(2, 0);
-  var geom = new THREE.IcosahedronGeometry(7, 1);
-  var geom2 = new THREE.IcosahedronGeometry(15, 1);
+  // var geometryt = new THREE.TetrahedronGeometry(2, 0);
+  // var geom = new THREE.IcosahedronGeometry(7, 1);
+  // var geom2 = new THREE.IcosahedronGeometry(15, 1);
 
 
   //CREATE PARTICLES
@@ -91,23 +97,23 @@ function init() {
   });
 
 	var numParticles = AMOUNTX * AMOUNTY;
-	var positions = new Float32Array( numParticles * 3 );
-	var scales = new Float32Array( numParticles );
-	var i = 0, j = 0;
-	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
-		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-			positions[ i ] = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 ); // x
-			positions[ i + 1 ] = 0; // y
-			positions[ i + 2 ] = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 ); // z
-			scales[ j ] = 1;
-			i += 3;
-			j ++;
-		}
-	}
+	//var positions = new Float32Array( numParticles * 3 );
+	//var scales = new Float32Array( numParticles );
+	// var i = 0, j = 0;
+	// for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+	// 	for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+	// 		positions[ i ] = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 ); // x
+	// 		positions[ i + 1 ] = 0; // y
+	// 		positions[ i + 2 ] = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 ); // z
+	// 		scales[ j ] = 1;
+	// 		i += 3;
+	// 		j ++;
+	// 	}
+	// }
 
 	var geometry = new THREE.BufferGeometry();
-	geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
+	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 
 	var material = new THREE.ShaderMaterial( {
 		uniforms: {
@@ -141,9 +147,9 @@ function init() {
   //planet.scale.x = planet.scale.y = planet.scale.z = 16;
   earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
   //console.log(earGrp.geometry.vertices.attributes.position.array);
-  var planet2 = new THREE.Mesh(geom2, mat2);
-  planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
-  skelet.add(planet2);
+  // var planet2 = new THREE.Mesh(geom2, mat2);
+  // planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
+  // skelet.add(planet2);
 
   //LIGHTS
 
@@ -198,30 +204,58 @@ function onDocumentTouchMove( event ) {
 // }
 
 function animate() {
-  var data = analyser.getAverageFrequency();
-  //console.log(data);
+  var data = new Uint8Array(analyser.getFrequencyData());
+  //console.log(analyser.getFrequencyData());
+
+  if (earGrp.children[0]){
+    if (counter==0){
+
+
+      positions = earGrp.children[0].geometry.attributes.position.array;
+      oldPos = new Float32Array(positions);
+      //console.log(oldPos[1]);
+    }
+
+    else {
+      for ( var i = 1; i < positions.length; i += 3 ) {
+          var shuffle = Math.floor(0 + (256 - 1) * (((i/3) - 1) / (positions.length/3 - 1)));
+          //console.log(shuffle);
+          positions[i] = oldPos[i]+(data[shuffle]/50);
+
+      }
+      //console.log(oldPos[1]);
+    }
+    earGrp.children[0].geometry.attributes.position.needsUpdate = true;
+    //console.log(earGrp.children[0].geometry.attributes.position);
+    counter += 1;
+    //console.log(counter);
+  }
+
+
+
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
 	camera.lookAt( scene.position );
 
-	var positions = particles.geometry.attributes.position.array;
-	var scales = particles.geometry.attributes.scale.array;
-	var i = 0, j = 0;
-	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
-		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-			positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * data ) +
-							( Math.sin( ( iy + count ) * 0.5 ) * data );
-			scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/40) +
-							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/40);
-			i += 3;
-			j ++;
-		}
-	}
-	particles.geometry.attributes.position.needsUpdate = true;
-	particles.geometry.attributes.scale.needsUpdate = true;
 
-  count += 0.1;
+	// var positions = particles.geometry.attributes.position.array;
+	// var scales = particles.geometry.attributes.scale.array;
+	// var i = 0, j = 0;
+	// for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+	// 	for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+	// 		positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * data ) +
+	// 						( Math.sin( ( iy + count ) * 0.5 ) * data );
+	// 		scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/40) +
+	// 						( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/40);
+	// 		i += 3;
+	// 		j ++;
+	// 	}
+	// }
+	// particles.geometry.attributes.position.needsUpdate = true;
+	// particles.geometry.attributes.scale.needsUpdate = true;
+
+
 
   //particle.rotation.x = mousedelta;
   //particle.rotation.y = mousedelta;
