@@ -1,6 +1,6 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles,analyser;
+var renderer, scene, camera, composer, circle, skelet, particle, ear, earGrp, particles,analyser,child;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
 var windowHalfX = window.innerWidth / 2;
@@ -36,7 +36,7 @@ function init() {
   camera.add(listener);
   var sound = new THREE.Audio(listener);
   var audioLoader = new THREE.AudioLoader();
-  audioLoader.load("/CoskuWebsite/01_Mountain_Ash.mp3", function(buffer) {
+  audioLoader.load("01_Mountain_Ash.mp3", function(buffer) {
   sound.setBuffer( buffer )});
 
   function playSound() {
@@ -65,7 +65,7 @@ function init() {
   //scene.add(skelet);
 
   var loader = new OBJLoader();
-  loader.load( '/CoskuWebsite/geo/heightfield.obj', function ( ear )
+  loader.load( 'geo/heightfield.obj', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
@@ -140,7 +140,7 @@ function init() {
   //var planet = new THREE.Mesh(earGrp, mat2);
   //planet.scale.x = planet.scale.y = planet.scale.z = 16;
   earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
-
+  //console.log(earGrp.geometry.vertices.attributes.position.array);
   var planet2 = new THREE.Mesh(geom2, mat2);
   planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
   skelet.add(planet2);
@@ -204,6 +204,7 @@ function animate() {
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
 	camera.lookAt( scene.position );
+
 	var positions = particles.geometry.attributes.position.array;
 	var scales = particles.geometry.attributes.scale.array;
 	var i = 0, j = 0;
