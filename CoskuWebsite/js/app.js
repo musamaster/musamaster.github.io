@@ -228,11 +228,11 @@ function animate() {
   //skelet.rotation.y = mousedelta;
   particles.position.y = -200.0;
   //particle.rotation.x += 0.0000;
-  particle.rotation.y -= 0.0030;
+  particle.rotation.y -= 0.0010;
   //earGrp.rotation.x -= 0.0020;
-  earGrp.rotation.y -= 0.0030;
-  skelet.rotation.x -= 0.0010;
-  skelet.rotation.y += 0.0020;
+  earGrp.rotation.y -= 0.0010;
+  //skelet.rotation.x -= 0.0010;
+  //skelet.rotation.y += 0.0020;
   renderer.clear();
 
   renderer.render( scene, camera )
