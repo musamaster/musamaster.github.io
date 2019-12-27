@@ -108,6 +108,7 @@ function init() {
 	var geometry = new THREE.BufferGeometry();
 	geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
+
 	var material = new THREE.ShaderMaterial( {
 		uniforms: {
 			color: { value: new THREE.Color( 0xffffff ) },
@@ -201,7 +202,7 @@ function animate() {
   //console.log(data);
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
-	camera.position.y += ( - mouseY - camera.position.y ) * .05;
+	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
 	camera.lookAt( scene.position );
 	var positions = particles.geometry.attributes.position.array;
 	var scales = particles.geometry.attributes.scale.array;
