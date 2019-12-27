@@ -21,13 +21,19 @@ function init() {
 
   //SCENE
   scene = new THREE.Scene();
-
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+  //---CAMERA
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
   camera.position.z = 400;
   scene.add(camera);
+  //---CAMERA
+
+  //---FOG
+  scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0015 );
+  //---FOG
+
+  //---AUDIO
   var listener = new THREE.AudioListener();
   camera.add(listener);
-
   var sound = new THREE.Audio(listener);
   var audioLoader = new THREE.AudioLoader();
   audioLoader.load("/CoskuWebsite/01_Mountain_Ash.mp3", function(buffer) {
@@ -42,11 +48,12 @@ function init() {
   }
   window.addEventListener('touchstart', playSound);
   document.addEventListener('click', playSound);
+
   // create an AudioAnalyser, passing in the sound and desired fftSize
   analyser = new THREE.AudioAnalyser( sound, 1024 );
-
   // get the average frequency of the sound
 
+  //---AUDIO
 
   //GEOMETRY
 
@@ -58,7 +65,7 @@ function init() {
   //scene.add(skelet);
 
   var loader = new OBJLoader();
-  loader.load( '/CoskuWebsite/geo/ear.obj', function ( ear )
+  loader.load( '/CoskuWebsite/geo/heightfield.obj', function ( ear )
   {
     ear.traverse( ( child ) =>
     {
@@ -71,7 +78,7 @@ function init() {
 
   } );
 
-  //CREATE TET GEO
+  //---CREATE TET GEO
   var geometryt = new THREE.TetrahedronGeometry(2, 0);
   var geom = new THREE.IcosahedronGeometry(7, 1);
   var geom2 = new THREE.IcosahedronGeometry(15, 1);
@@ -145,10 +152,10 @@ function init() {
   var lights = [];
   lights[0] = new THREE.DirectionalLight( 0xffffff, 0.5 );
   lights[0].position.set( 1, 0, 0 );
-  lights[1] = new THREE.DirectionalLight( 0xf2f1bf, 1.0 );
+  lights[1] = new THREE.DirectionalLight( 0xefd1b5, 1.0 );
   lights[1].position.set( 0.75, 1, 0.5 );
   lights[2] = new THREE.DirectionalLight( 0x1B002A, 1.0 );
-  lights[2].position.set( -0.75, -1, 0.5 );
+  lights[2].position.set( -0.75, 1, 0.5 );
   scene.add( lights[0] );
   scene.add( lights[1] );
   scene.add( lights[2] );
@@ -220,8 +227,8 @@ function animate() {
   //skelet.rotation.y = mousedelta;
   particles.position.y = -200.0;
   //particle.rotation.x += 0.0000;
-  //particle.rotation.y -= 0.0040;
-  earGrp.rotation.x -= 0.0020;
+  particle.rotation.y -= 0.0030;
+  //earGrp.rotation.x -= 0.0020;
   earGrp.rotation.y -= 0.0030;
   skelet.rotation.x -= 0.0010;
   skelet.rotation.y += 0.0020;
