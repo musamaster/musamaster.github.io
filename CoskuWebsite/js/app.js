@@ -1,10 +1,12 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
+import { OBJLoader2 } from "../jsm/loaders/OBJLoader2.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear, bufferGeometry ,analyser,child;
 var positions;
 var normals;
 var oldPos;
 var initPos;
+var indexB;
+var mat;
 var earGrp = false;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
@@ -56,7 +58,7 @@ function init() {
   document.addEventListener('click', playSound);
 
   // create an AudioAnalyser, passing in the sound and desired fftSize
-  analyser = new THREE.AudioAnalyser( sound, 256 );
+  analyser = new THREE.AudioAnalyser( sound, 512 );
   // get the average frequency of the sound
 
   //---AUDIO
@@ -67,9 +69,12 @@ function init() {
   skelet = new THREE.Object3D();
   particle = new THREE.Object3D();
 
-  var loader = new OBJLoader();
+  var loader = new OBJLoader2().setUseIndices( true );
+
+
   loader.load( 'geo/heightfield.obj', function ( ear )
   {
+    ear.children[0].material = mat;
     earGrp.add(ear.children[0]);
 
 
@@ -95,7 +100,7 @@ function init() {
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	} );
 
-  var mat = new THREE.MeshPhongMaterial({
+  mat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
     shading: THREE.FlatShading
   });
@@ -108,10 +113,11 @@ function init() {
   });
 
   var bufferMesh = new THREE.Mesh( bufferGeometry, mat);
-  scene.add(bufferMesh);
+  scene.add(earGrp);
 
 
   bufferMesh.scale.x =   bufferMesh.scale.y =   bufferMesh.scale.z = 2;
+  earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
 
   //LIGHTS
 
@@ -161,9 +167,7 @@ function onDocumentTouchMove( event ) {
 	}
 }
 
-function animate() {
-  var data = new Uint8Array(analyser.getFrequencyData());
-
+function animateGeometry(data) {
   if (earGrp.children[0]){
     if (counter==0){
 
@@ -173,23 +177,25 @@ function animate() {
       //initPos = earGrp.children[0].geometry.getAttribute("position");
       initPos = new THREE.Float32BufferAttribute(earGrp.children[0].geometry.attributes.position.array,3);
       normals = earGrp.children[0].geometry.getAttribute("normal");
-      //console.log(positions);
+      //indexB = earGrp.children[0].geometry.getIndex();
+      //console.log(indexB);
 
 
       // var interleavedBuffer = new THREE.InterleavedBuffer(positions,3);
       positions.setUsage(THREE.DynamicDrawUsage);
       //normals.setUsage(THREE.DynamicDrawUsage);
       bufferGeometry.setAttribute('normal', normals);
+      bufferGeometry.setAttribute('position', positions);
 
     }
 
     else {
       for ( var i = 0; i < positions.count; i += 1 ) {
-          //var shuffle = Math.floor(0 + (256 - 1) * (((i/3) - 1) / (positions.length/3 - 1)));
           let shuffle = Math.floor((i/(128))%128);
-          //console.log(positions.getY(i));
+
           let newPos = initPos.getY(i)+(data[shuffle]/50);
           positions.setY(i,newPos);
+          bufferGeometry.setIndex(indexB);
           bufferGeometry.setAttribute('position', positions);
 
       }
@@ -199,28 +205,28 @@ function animate() {
   }
 
 
+}
+
+function animate() {
+  var data = new Uint8Array(analyser.getFrequencyData());
+  //console.log(data.length);
+  var texture = new THREE.DataTexture( data, 16, 16, THREE.LuminanceFormat );
+  texture.needsUpdate = true;
+  texture.magFilter = THREE.LinearFilter;
+  mat.displacementMap = texture;
+  mat.displacementScale = 10;
+  //console.log(earGrp.children[0]);
+
+
+  //animateGeometry(data);
+
+
 
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
 	camera.lookAt( scene.position );
 
-
-	// var positions = particles.geometry.attributes.position.array;
-	// var scales = particles.geometry.attributes.scale.array;
-	// var i = 0, j = 0;
-	// for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
-	// 	for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-	// 		positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * data ) +
-	// 						( Math.sin( ( iy + count ) * 0.5 ) * data );
-	// 		scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * (data/40) +
-	// 						( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * (data/40);
-	// 		i += 3;
-	// 		j ++;
-	// 	}
-	// }
-	// particles.geometry.attributes.position.needsUpdate = true;
-	// particles.geometry.attributes.scale.needsUpdate = true;
 
 
 
