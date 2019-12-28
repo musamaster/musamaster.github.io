@@ -1,8 +1,10 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, particles,analyser,child;
-var positions = new Float32Array();
-var oldPos = new Float32Array();
+var renderer, scene, camera, composer, circle, skelet, particle, ear, bufferGeometry ,analyser,child;
+var positions;
+var normals;
+var oldPos;
+var initPos;
 var earGrp = false;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
@@ -54,7 +56,7 @@ function init() {
   document.addEventListener('click', playSound);
 
   // create an AudioAnalyser, passing in the sound and desired fftSize
-  analyser = new THREE.AudioAnalyser( sound, 512 );
+  analyser = new THREE.AudioAnalyser( sound, 256 );
   // get the average frequency of the sound
 
   //---AUDIO
@@ -65,53 +67,23 @@ function init() {
   skelet = new THREE.Object3D();
   particle = new THREE.Object3D();
 
-
-  //scene.add(skelet);
-
   var loader = new OBJLoader();
   loader.load( 'geo/heightfield.obj', function ( ear )
   {
-    //console.log(ear.children[0]);
     earGrp.add(ear.children[0]);
 
 
   } );
 
-  scene.add(earGrp);
 
 
-
-
-
-  //console.log(positions);
-  //---CREATE TET GEO
-  // var geometryt = new THREE.TetrahedronGeometry(2, 0);
-  // var geom = new THREE.IcosahedronGeometry(7, 1);
-  // var geom2 = new THREE.IcosahedronGeometry(15, 1);
-
-
-  //CREATE PARTICLES
+  //CREATE MATERIALS
   var material = new THREE.MeshPhongMaterial({
     color: 0xffffff,
     shading: THREE.FlatShading
   });
 
-	var numParticles = AMOUNTX * AMOUNTY;
-	//var positions = new Float32Array( numParticles * 3 );
-	//var scales = new Float32Array( numParticles );
-	// var i = 0, j = 0;
-	// for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
-	// 	for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-	// 		positions[ i ] = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 ); // x
-	// 		positions[ i + 1 ] = 0; // y
-	// 		positions[ i + 2 ] = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 ); // z
-	// 		scales[ j ] = 1;
-	// 		i += 3;
-	// 		j ++;
-	// 	}
-	// }
-
-	var geometry = new THREE.BufferGeometry();
+	bufferGeometry = new THREE.BufferGeometry();
 	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 
@@ -122,14 +94,6 @@ function init() {
 		vertexShader: document.getElementById( 'vertexshader' ).textContent,
 		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	} );
-
-
-	particles = new THREE.Points( geometry, material );
-	scene.add( particles );
-
-
-  //MATERIALS
-
 
   var mat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
@@ -143,13 +107,11 @@ function init() {
 
   });
 
-  //var planet = new THREE.Mesh(earGrp, mat2);
-  //planet.scale.x = planet.scale.y = planet.scale.z = 16;
-  earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
-  //console.log(earGrp.geometry.vertices.attributes.position.array);
-  // var planet2 = new THREE.Mesh(geom2, mat2);
-  // planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
-  // skelet.add(planet2);
+  var bufferMesh = new THREE.Mesh( bufferGeometry, mat);
+  scene.add(bufferMesh);
+
+
+  bufferMesh.scale.x =   bufferMesh.scale.y =   bufferMesh.scale.z = 2;
 
   //LIGHTS
 
@@ -199,36 +161,41 @@ function onDocumentTouchMove( event ) {
 	}
 }
 
-// window.onload = function() {
-
-// }
-
 function animate() {
   var data = new Uint8Array(analyser.getFrequencyData());
-  //console.log(analyser.getFrequencyData());
 
   if (earGrp.children[0]){
     if (counter==0){
 
+      //test = earGrp.children[0].geometry.getIndex();
+      //console.log(test);
+      positions = earGrp.children[0].geometry.getAttribute("position");
+      //initPos = earGrp.children[0].geometry.getAttribute("position");
+      initPos = new THREE.Float32BufferAttribute(earGrp.children[0].geometry.attributes.position.array,3);
+      normals = earGrp.children[0].geometry.getAttribute("normal");
+      //console.log(positions);
 
-      positions = earGrp.children[0].geometry.attributes.position.array;
-      oldPos = new Float32Array(positions);
-      //console.log(oldPos[1]);
+
+      // var interleavedBuffer = new THREE.InterleavedBuffer(positions,3);
+      positions.setUsage(THREE.DynamicDrawUsage);
+      //normals.setUsage(THREE.DynamicDrawUsage);
+      bufferGeometry.setAttribute('normal', normals);
+
     }
 
     else {
-      for ( var i = 1; i < positions.length; i += 3 ) {
-          var shuffle = Math.floor(0 + (256 - 1) * (((i/3) - 1) / (positions.length/3 - 1)));
-          //console.log(shuffle);
-          positions[i] = oldPos[i]+(data[shuffle]/50);
+      for ( var i = 0; i < positions.count; i += 1 ) {
+          //var shuffle = Math.floor(0 + (256 - 1) * (((i/3) - 1) / (positions.length/3 - 1)));
+          let shuffle = Math.floor((i/(128))%128);
+          //console.log(positions.getY(i));
+          let newPos = initPos.getY(i)+(data[shuffle]/50);
+          positions.setY(i,newPos);
+          bufferGeometry.setAttribute('position', positions);
 
       }
-      //console.log(oldPos[1]);
     }
-    earGrp.children[0].geometry.attributes.position.needsUpdate = true;
-    //console.log(earGrp.children[0].geometry.attributes.position);
+    earGrp.children[0].geometry.getAttribute("position").needsUpdate = true;
     counter += 1;
-    //console.log(counter);
   }
 
 
@@ -257,13 +224,10 @@ function animate() {
 
 
 
-  //particle.rotation.x = mousedelta;
-  //particle.rotation.y = mousedelta;
+
   //skelet.rotation.x = mousedelta;
   //skelet.rotation.y = mousedelta;
-  particles.position.y = -200.0;
-  //particle.rotation.x += 0.0000;
-  particle.rotation.y -= 0.0010;
+
   //earGrp.rotation.x -= 0.0020;
   earGrp.rotation.y -= 0.0010;
   //skelet.rotation.x -= 0.0010;
