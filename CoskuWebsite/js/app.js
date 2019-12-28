@@ -1,6 +1,6 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader2 } from "../jsm/loaders/OBJLoader2.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, bufferGeometry ,analyser,child;
+var renderer, scene, camera, composer, circle, skelet, particle, ear, analyser;
 var positions;
 var normals;
 var oldPos;
@@ -54,6 +54,7 @@ function init() {
     source.connect(listener.context.destination);
     source.start();
   }
+
   window.addEventListener('touchstart', playSound);
   document.addEventListener('click', playSound);
 
@@ -88,7 +89,7 @@ function init() {
     shading: THREE.FlatShading
   });
 
-	bufferGeometry = new THREE.BufferGeometry();
+	//bufferGeometry = new THREE.BufferGeometry();
 	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 
@@ -112,11 +113,8 @@ function init() {
 
   });
 
-  var bufferMesh = new THREE.Mesh( bufferGeometry, mat);
   scene.add(earGrp);
 
-
-  bufferMesh.scale.x =   bufferMesh.scale.y =   bufferMesh.scale.z = 2;
   earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
 
   //LIGHTS
@@ -215,29 +213,15 @@ function animate() {
   texture.magFilter = THREE.LinearFilter;
   mat.displacementMap = texture;
   mat.displacementScale = 10;
-  //console.log(earGrp.children[0]);
-
-
-  //animateGeometry(data);
-
-
 
   requestAnimationFrame(animate);
   camera.position.x += ( mouseX - camera.position.x ) * .05;
 	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
+
 	camera.lookAt( scene.position );
 
-
-
-
-
-  //skelet.rotation.x = mousedelta;
-  //skelet.rotation.y = mousedelta;
-
-  //earGrp.rotation.x -= 0.0020;
   earGrp.rotation.y -= 0.0010;
-  //skelet.rotation.x -= 0.0010;
-  //skelet.rotation.y += 0.0020;
+
   renderer.clear();
 
   renderer.render( scene, camera )

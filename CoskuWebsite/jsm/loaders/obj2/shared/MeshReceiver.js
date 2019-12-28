@@ -9,7 +9,7 @@ import {
 	LineSegments,
 	Mesh,
 	Points
-} from "../../../../../js/three.module.js";
+} from "../../../../js/three.module.js";
 
 
 /**

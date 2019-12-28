@@ -7,11 +7,11 @@ import {
 	FileLoader,
 	Object3D,
 	Loader
-} from "../../../js/three.module.js";
+} from "../../js/three.module.js";
 
-import { OBJLoader2Parser } from "./obj2/worker/parallel/OBJLoader2Parser.js";
-import { MeshReceiver } from "./obj2/shared/MeshReceiver.js";
-import { MaterialHandler } from "./obj2/shared/MaterialHandler.js";
+import { OBJLoader2Parser } from "../loaders/obj2/worker/parallel/OBJLoader2Parser.js";
+import { MeshReceiver } from "../loaders/obj2/shared/MeshReceiver.js";
+import { MaterialHandler } from "../loaders/obj2/shared/MaterialHandler.js";
 
 /**
  * Creates a new OBJLoader2. Use it to load OBJ data from files or to parse OBJ data from arraybuffer or text.
