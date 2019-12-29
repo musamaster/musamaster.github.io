@@ -109,13 +109,13 @@ function init() {
 	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 
-	var material = new THREE.ShaderMaterial( {
-		uniforms: {
-			color: { value: new THREE.Color( 0xffffff ) },
-		},
-		vertexShader: document.getElementById( 'vertexshader' ).textContent,
-		fragmentShader: document.getElementById( 'fragmentshader' ).textContent
-	} );
+	// var material = new THREE.ShaderMaterial( {
+	// 	uniforms: {
+	// 		color: { value: new THREE.Color( 0xffffff ) },
+	// 	},
+	// 	vertexShader: document.getElementById( 'vertexshader' ).textContent,
+	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+	// } );
 
   mat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
