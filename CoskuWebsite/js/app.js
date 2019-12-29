@@ -1,6 +1,7 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
-import { OBJLoader2 } from "../jsm/loaders/OBJLoader2.js";
+import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
 var renderer, scene, camera, composer, circle, skelet, particle, ear, analyser;
+var bufferGeometry;
 var positions;
 var normals;
 var oldPos;
@@ -67,10 +68,8 @@ function init() {
   //GEOMETRY
 
   earGrp = new THREE.Group();
-  skelet = new THREE.Object3D();
-  particle = new THREE.Object3D();
 
-  var loader = new OBJLoader2().setUseIndices( true );
+  var loader = new OBJLoader();
 
 
   loader.load( 'geo/heightfield.obj', function ( ear )
@@ -89,7 +88,10 @@ function init() {
     shading: THREE.FlatShading
   });
 
-	//bufferGeometry = new THREE.BufferGeometry();
+	bufferGeometry = new THREE.BufferGeometry();
+  var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+
 	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
 
