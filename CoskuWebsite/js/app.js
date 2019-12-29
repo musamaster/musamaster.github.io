@@ -69,6 +69,7 @@ function init() {
 
   earGrp = new THREE.Group();
 
+
   var loader = new OBJLoader();
 
 
@@ -88,8 +89,21 @@ function init() {
     shading: THREE.FlatShading
   });
 
-	bufferGeometry = new THREE.BufferGeometry();
-  var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
+	// bufferGeometry = new THREE.BufferGeometry();
+  // var numPts = 20
+  // var treePoints,treeColors = new Float32Array(numPts*3);
+  // var indexBuf = new Uint8Array(numPts);
+  //
+  // //var treePoints = [0,0,0,0,30,0,10,40,0,-10,45,20];
+  // //var treeColors = [0,0,0,0,0,0,0,0,0,0,0,0];
+  // //var index = [0,1,1,2,1,3];
+  // bufferGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( treePoints, 3 ) );
+  // bufferGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( treeColors, 3 ) );
+  // bufferGeometry.setIndex(indexBuf);
+  // bufferGeometry.computeBoundingSphere();
+  // var treeMat = new THREE.LineBasicMaterial({ vertexColors: THREE.VertexColors });
+  // var treeMesh = new THREE.Line(bufferGeometry,treeMat);
+  // scene.add(treeMesh);
 
 
 	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
