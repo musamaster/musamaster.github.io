@@ -119,7 +119,8 @@ function init() {
 
   mat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
-    shading: THREE.FlatShading
+    shading: THREE.FlatShading,
+    wireframe: true,	  
   });
 
   var mat2 = new THREE.MeshPhongMaterial({
