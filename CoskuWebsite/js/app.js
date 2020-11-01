@@ -118,7 +118,7 @@ function init() {
 	// } );
 
   mat = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
+    color: 0xb4b4b4,
     shading: THREE.FlatShading,
     wireframe: true,	  
   });
