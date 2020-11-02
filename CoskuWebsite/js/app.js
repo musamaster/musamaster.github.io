@@ -231,8 +231,8 @@ function animate() {
   mat.displacementScale = 10;
 
   requestAnimationFrame(animate);
-  camera.position.x += ( mouseX - camera.position.x ) * .05;
-	camera.position.y += ( - (mouseY/4) - camera.position.y ) * .05;
+  camera.position.x += ( mouseX/3 - camera.position.x ) * .05;
+	camera.position.y += ( - (mouseY/6) - camera.position.y ) * .05;
 
 	camera.lookAt( scene.position );
 
