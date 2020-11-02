@@ -117,7 +117,7 @@ function init() {
 	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	// } );
 
-  mat = new THREE.MeshBasicMaterial({
+  mat = new THREE.MeshPhongMaterial({
     color: 0xb4b4b4,
     shading: THREE.FlatShading,
     wireframe: true,	  
