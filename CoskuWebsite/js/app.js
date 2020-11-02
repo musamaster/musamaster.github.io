@@ -117,12 +117,12 @@ function init() {
 	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	// } );
 
-  mat = new THREE.MeshPhongMaterial({
+  mat = new THREE.MeshBasicMaterial({
     color: 0xb4b4b4,
     //emissive: 0xb4b4b4,
-    side: THREE.DoubleSide,
+    //side: THREE.DoubleSide,
     flatShading: true,
-    wireframe: true,	  
+    wireframe: true,
   });
 
   var mat2 = new THREE.MeshPhongMaterial({
