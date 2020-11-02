@@ -120,7 +120,7 @@ function init() {
   mat = new THREE.MeshPhongMaterial({
     color: 0xb4b4b4,
     emissive: 0xb4b4b4,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
     flatShading: true,
     wireframe: true,	  
   });
