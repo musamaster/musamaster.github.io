@@ -37,7 +37,7 @@ function init() {
   //---CAMERA
 
   //---FOG
-  scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0015 );
+  //scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0015 );
   //---FOG
 
   //---AUDIO
@@ -118,8 +118,11 @@ function init() {
 	// } );
 
   mat = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    shading: THREE.FlatShading
+    color: 0xb4b4b4,
+    //emissive: 0xb4b4b4,
+    side: THREE.DoubleSide,
+    flatShading: true,
+    wireframe: true,	  
   });
 
   var mat2 = new THREE.MeshPhongMaterial({
