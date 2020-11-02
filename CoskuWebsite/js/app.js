@@ -37,7 +37,7 @@ function init() {
   //---CAMERA
 
   //---FOG
-  scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0015 );
+  //scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0015 );
   //---FOG
 
   //---AUDIO
@@ -117,7 +117,7 @@ function init() {
 	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 	// } );
 
-  mat = new THREE.MeshPhongMaterial({
+  mat = new THREE.MeshBasicMaterial({
     color: 0xb4b4b4,
     shading: THREE.FlatShading,
     wireframe: true,	  
