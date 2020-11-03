@@ -1,6 +1,6 @@
 //import { NURBSCurve } from "jsm/curves/NURBSCurve.js";
 import { OBJLoader } from "../jsm/loaders/OBJLoader.js";
-var renderer, scene, camera, composer, circle, skelet, particle, ear, analyser;
+var renderer, scene, camera, composer, circle, skelet, particle, mountain, analyser;
 var bufferGeometry;
 var positions;
 var normals;
@@ -8,7 +8,7 @@ var oldPos;
 var initPos;
 var indexB;
 var mat;
-var earGrp = false;
+var mountainGrp = false;
 var mouseX = 0, mouseY = 0, count = 0;
 var SEPARATION = 30, AMOUNTX = 50, AMOUNTY = 50;
 var windowHalfX = window.innerWidth / 2;
@@ -16,7 +16,8 @@ var windowHalfY = window.innerHeight / 2;
 var mousedelta = 0.0;
 var counter = 0;
 
-function init() {
+function init()
+{
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
@@ -48,7 +49,8 @@ function init() {
   audioLoader.load("01_Mountain_Ash.mp3", function(buffer) {
   sound.setBuffer( buffer )});
 
-  function playSound() {
+  function playSound()
+  {
 
     sound.play();
     var source = listener.context.createBufferSource();
@@ -67,90 +69,57 @@ function init() {
 
   //GEOMETRY
 
-  earGrp = new THREE.Group();
+  mountainGrp = new THREE.Group();
 
 
   var loader = new OBJLoader();
 
 
-  loader.load( 'geo/heightfield.obj', function ( ear )
+  loader.load( 'geo/heightfield.obj', function ( mountain )
   {
-    ear.children[0].material = mat;
-    earGrp.add(ear.children[0]);
-
-
+    mountain.children[0].material = mat;
+    mountainGrp.add(mountain.children[0]);
   } );
+  //PARTICLES
+  // create the particle variables
+  // var particleCount = 1800;
+  // var particleGeo = new THREE.BufferGeometry();
+  // const particleMaterial = new THREE.PointsMaterial( { size: 15, vertexColors: true } );
+  // var points = new THREE.Points( particleGeo, particleMaterial );
+  // scene.add( points );
 
 
 
   //CREATE MATERIALS
-  var material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    shading: THREE.FlatShading
-  });
 
-	// bufferGeometry = new THREE.BufferGeometry();
-  // var numPts = 20
-  // var treePoints,treeColors = new Float32Array(numPts*3);
-  // var indexBuf = new Uint8Array(numPts);
-  //
-  // //var treePoints = [0,0,0,0,30,0,10,40,0,-10,45,20];
-  // //var treeColors = [0,0,0,0,0,0,0,0,0,0,0,0];
-  // //var index = [0,1,1,2,1,3];
-  // bufferGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( treePoints, 3 ) );
-  // bufferGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( treeColors, 3 ) );
-  // bufferGeometry.setIndex(indexBuf);
-  // bufferGeometry.computeBoundingSphere();
-  // var treeMat = new THREE.LineBasicMaterial({ vertexColors: THREE.VertexColors });
-  // var treeMesh = new THREE.Line(bufferGeometry,treeMat);
-  // scene.add(treeMesh);
-
-
-	//geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-	//geometry.setAttribute( 'scale', new THREE.BufferAttribute( scales, 1 ) );
-
-	// var material = new THREE.ShaderMaterial( {
-	// 	uniforms: {
-	// 		color: { value: new THREE.Color( 0xffffff ) },
-	// 	},
-	// 	vertexShader: document.getElementById( 'vertexshader' ).textContent,
-	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
-	// } );
-
-  mat = new THREE.MeshBasicMaterial({
+  mat = new THREE.MeshStandardMaterial({
     color: 0xb4b4b4,
-    //emissive: 0xb4b4b4,
+    emissive: 0xb4b4b4,
     //side: THREE.DoubleSide,
-    flatShading: true,
+    //flatShading: true,
     wireframe: true,
   });
 
-  var mat2 = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    wireframe: true,
-    side: THREE.DoubleSide
 
-  });
+  scene.add(mountainGrp);
 
-  scene.add(earGrp);
-
-  earGrp.scale.x =   earGrp.scale.y =   earGrp.scale.z = 2;
+  mountainGrp.scale.x =   mountainGrp.scale.y =   mountainGrp.scale.z = 2;
 
   //LIGHTS
 
-  var ambientLight = new THREE.AmbientLight(0x999999,0.25 );
-  scene.add(ambientLight);
-
-  var lights = [];
-  lights[0] = new THREE.DirectionalLight( 0xffffff, 0.5 );
-  lights[0].position.set( 1, 0, 0 );
-  lights[1] = new THREE.DirectionalLight( 0xefd1b5, 1.0 );
-  lights[1].position.set( 0.75, 1, 0.5 );
-  lights[2] = new THREE.DirectionalLight( 0x1B002A, 1.0 );
-  lights[2].position.set( -0.75, 1, 0.5 );
-  scene.add( lights[0] );
-  scene.add( lights[1] );
-  scene.add( lights[2] );
+  // var ambientLight = new THREE.AmbientLight(0x999999,0.25 );
+  // scene.add(ambientLight);
+  //
+  // var lights = [];
+  // lights[0] = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  // lights[0].position.set( 1, 0, 0 );
+  // lights[1] = new THREE.DirectionalLight( 0xefd1b5, 1.0 );
+  // lights[1].position.set( 0.75, 1, 0.5 );
+  // lights[2] = new THREE.DirectionalLight( 0x1B002A, 1.0 );
+  // lights[2].position.set( -0.75, 1, 0.5 );
+  // scene.add( lights[0] );
+  // scene.add( lights[1] );
+  // scene.add( lights[2] );
 
 
   window.addEventListener('resize', onWindowResize, false);
@@ -184,42 +153,47 @@ function onDocumentTouchMove( event ) {
 	}
 }
 
-function animateGeometry(data) {
-  if (earGrp.children[0]){
-    if (counter==0){
+function animateParticles() {
+  if (geo instanceof mountainGrp.children[0].geometry)
+  {
 
-      //test = earGrp.children[0].geometry.getIndex();
-      //console.log(test);
-      positions = earGrp.children[0].geometry.getAttribute("position");
-      //initPos = earGrp.children[0].geometry.getAttribute("position");
-      initPos = new THREE.Float32BufferAttribute(earGrp.children[0].geometry.attributes.position.array,3);
-      normals = earGrp.children[0].geometry.getAttribute("normal");
-      //indexB = earGrp.children[0].geometry.getIndex();
-      //console.log(indexB);
+    // let positions: Float32Array = geo.attributes["position"].array;
+    // let ptCout = positions.length / 3;
+    // for (let i = 0; i < ptCout; i++)
+    // {
+    //     let p = new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+    // }
+    //test = mountainGrp.children[0].geometry.getIndex();
+    //console.log(test);
+    //positions = mountainGrp.children[0].geometry.getAttribute("position");
+    //initPos = mountainGrp.children[0].geometry.getAttribute("position");
+    //initPos = new THREE.Float32BufferAttribute(mountainGrp.children[0].geometry.attributes.position.array,3);
+    //normals = mountainGrp.children[0].geometry.getAttribute("normal");
+    //indexB = mountainGrp.children[0].geometry.getIndex();
+    //console.log(indexB);
 
 
-      // var interleavedBuffer = new THREE.InterleavedBuffer(positions,3);
-      positions.setUsage(THREE.DynamicDrawUsage);
-      //normals.setUsage(THREE.DynamicDrawUsage);
-      bufferGeometry.setAttribute('normal', normals);
-      bufferGeometry.setAttribute('position', positions);
-
-    }
-
-    else {
-      for ( var i = 0; i < positions.count; i += 1 ) {
-          let shuffle = Math.floor((i/(128))%128);
-
-          let newPos = initPos.getY(i)+(data[shuffle]/50);
-          positions.setY(i,newPos);
-          bufferGeometry.setIndex(indexB);
-          bufferGeometry.setAttribute('position', positions);
-
-      }
-    }
-    earGrp.children[0].geometry.getAttribute("position").needsUpdate = true;
-    counter += 1;
+    // var interleavedBuffer = new THREE.InterleavedBuffer(positions,3);
+    //positions.setUsage(THREE.DynamicDrawUsage);
+    //normals.setUsage(THREE.DynamicDrawUsage);
+    //bufferGeometry.setAttribute('normal', normals);
+    //bufferGeometry.setAttribute('position', positions);
   }
+
+  else {
+    for ( var i = 0; i < positions.count; i += 1 ) {
+        let shuffle = Math.floor((i/(128))%128);
+
+        let newPos = initPos.getY(i)+(data[shuffle]/50);
+        positions.setY(i,newPos);
+        bufferGeometry.setIndex(indexB);
+        bufferGeometry.setAttribute('position', positions);
+
+    }
+  }
+  mountainGrp.children[0].geometry.getAttribute("position").needsUpdate = true;
+  //counter += 1;
+
 
 
 }
@@ -239,7 +213,7 @@ function animate() {
 
 	camera.lookAt( scene.position );
 
-  earGrp.rotation.y -= 0.0010;
+  mountainGrp.rotation.y -= 0.0010;
 
   renderer.clear();
 
